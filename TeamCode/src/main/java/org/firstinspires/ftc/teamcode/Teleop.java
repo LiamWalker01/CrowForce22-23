@@ -32,7 +32,7 @@ public class Teleop extends LinearOpMode {
     private DcMotor backleftDrive = null;
     private DcMotor backrightDrive = null;
 
-    @Override
+    //@Override
     public void runOpMode() {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
@@ -54,8 +54,7 @@ public class Teleop extends LinearOpMode {
         frontrightDrive.setDirection(DcMotor.Direction.REVERSE);
         backleftDrive.setDirection(DcMotor.Direction.FORWARD);
         backrightDrive.setDirection(DcMotor.Direction.REVERSE);
-
-        // Wait for the game to start (driver presses PLAY)
+// Wait for the game to start (driver presses PLAY)
         waitForStart();
         runtime.reset();
 
@@ -85,6 +84,7 @@ public class Teleop extends LinearOpMode {
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             //telemetry.addData("Motors", "left (%.2f), right (%.2f)", pivot + (vertical+horizontal), pivot+ (-vertical-horizontal));
             telemetry.update();
+
         }
     }
 }

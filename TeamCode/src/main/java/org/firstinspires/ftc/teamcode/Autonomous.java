@@ -66,14 +66,41 @@ public class Autonomous extends LinearOpMode {
 
     }
 
-    public void turnEncoders(double direction, double speed) {
+    public void turnEncoders(double angle, double speed) {
+        frontleftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        frontrightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        backleftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        backrightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        frontleftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        frontrightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        backleftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        backrightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        if (angle > 0) {
+            while (frontrightDrive.getCurrentPosition() <= (angle/360)*348.5) {
+                frontleftDrive.setPower(speed);
+                backleftDrive.setPower(speed);
+                frontrightDrive.setPower(-speed);
+                backrightDrive.setPower(-speed);
+
+            }
+
+        }
+        if (angle < 0) {
+            while (frontrightDrive.getCurrentPosition() >= (angle/360)*348.5) {
+                frontleftDrive.setPower(speed);
+                backleftDrive.setPower(speed);
+                frontrightDrive.setPower(-speed);
+                backrightDrive.setPower(-speed);
+
+            }
+        }
     }
 
     public void moveTime(double angle, double speed, double time) {
         double sin = Math.sin(angle - Math.PI / 4);
         double cos = Math.cos(angle - Math.PI / 4);
         ElapsedTime movementTime = new ElapsedTime();
-        while (movementTime.time() <= time + 0.3) {
+        while (movementTime.time() <= time) {
             if (movementTime.time() < time) {
                 frontleftDrive.setPower(speed * cos);
                 frontrightDrive.setPower(speed * sin);
