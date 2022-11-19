@@ -48,9 +48,9 @@ public class Teleop extends LinearOpMode {
         // Initialize the hardware variables. Note that the strings used here as parameters
         // to 'get' must correspond to the names assigned during the robot configuration
         // step (using the FTC Robot Controller app on the phone).
-        frontleftDrive  = hardwareMap.get(DcMotor.class, "front_left_drive");
+        frontleftDrive = hardwareMap.get(DcMotor.class, "front_left_drive");
         frontrightDrive = hardwareMap.get(DcMotor.class, "front_right_drive");
-        backleftDrive  = hardwareMap.get(DcMotor.class, "back_left_drive");
+        backleftDrive = hardwareMap.get(DcMotor.class, "back_left_drive");
         backrightDrive = hardwareMap.get(DcMotor.class, "back_right_drive");
         middleslideDrive = hardwareMap.get(DcMotor.class, "middle_slides_drive");
         rightgripperDrive = hardwareMap.get(Servo.class, "right_gripper_drive");
@@ -92,29 +92,36 @@ public class Teleop extends LinearOpMode {
             rightgripperDrive.setPosition(0);
             leftgripperDrive.setPosition(0);
             middleslideDrive.setPower(0);
+            //middleslideDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             //setting the linear slides to go through sets. so like motor encoders
 
-            while(true) {
-                if (dpad_up == true) {
-                    middleslideDrive.setPower(1.0);
+            while (true) {
+                middleslideDrive.setPower(0);
+                if (dpad_up == true && middleslideDrive.getCurrentPosition() <= 4000)  {
+                    if (middleslideDrive.getCurrentPosition()<=4000) {middleslideDrive.setPower(0.85);}
+
                 }
-                if (dpad_down == true) {
-                    middleslideDrive.setPower(-1);
+                if (dpad_down == true && middleslideDrive.getCurrentPosition() >= 100) {
+
+                    if (middleslideDrive.getCurrentPosition()>= 100) {middleslideDrive.setPower(-0.5);}
+
                 }
+
+
                 if (aPress == true) {
                     sensitivity = 0.3;
                 }
 
                 if (rBPress == true && clampClose == false) {
-                    rightgripperDrive.setPosition(60);
                     rightgripperDrive.setPosition(-60);
-                    wait(20);
+                    rightgripperDrive.setPosition(60);
+                    //wait(2);
                     clampClose = true;
                 }
 
                 if (rBPress == true && clampClose == true) {
-                 rightgripperDrive.setPosition(0);
-                 leftgripperDrive.setPosition(0);
+                    rightgripperDrive.setPosition(0);
+                    leftgripperDrive.setPosition(0);
                 }
 
                 double vertical;
@@ -129,11 +136,17 @@ public class Teleop extends LinearOpMode {
                 frontleftDrive.setPower(-pivot + (-vertical - horizontal));
                 backleftDrive.setPower(-pivot + (-vertical + horizontal));
                 backrightDrive.setPower(pivot + (-vertical - horizontal));
+                dpad_up = gamepad2.dpad_up;
+                dpad_down = gamepad2.dpad_down;
 
+
+                rBPress = gamepad2.right_bumper;
 
                 // Show the elapsed game time and wheel power.
                 telemetry.addData("Status", "Run Time: " + runtime.toString());
                 //telemetry.addData("Motors", "left (%.2f), right (%.2f)", pivot + (vertical+horizontal), pivot+ (-vertical-horizontal));
+                telemetry.addData("Right Bumber", "T/F:" + rBPress);
+                telemetry.addData("SlidePosition", "Encoders:" + middleslideDrive.getCurrentPosition());
                 telemetry.update();
             }
         }
