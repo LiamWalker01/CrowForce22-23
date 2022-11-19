@@ -74,7 +74,7 @@ public class Teleop extends LinearOpMode {
         backleftDrive.setDirection(DcMotor.Direction.FORWARD);
         backrightDrive.setDirection(DcMotor.Direction.REVERSE);
         rightgripperDrive.setDirection(Servo.Direction.FORWARD);
-        leftgripperDrive.setDirection(Servo.Direction.REVERSE);
+        leftgripperDrive.setDirection(Servo.Direction.FORWARD);
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
         runtime.reset();
@@ -91,17 +91,17 @@ public class Teleop extends LinearOpMode {
 
             rBPress = gamepad2.right_bumper;
             lBPress = gamepad2.left_bumper;
-            rightgripperDrive.setPosition(-0.25);
-            leftgripperDrive.setPosition(-0.25);
+            rightgripperDrive.setPosition(0);
+            leftgripperDrive.setPosition(1);
             middleslideDrive.setPower(0);
             middleslideDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             //middleslideDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             //setting the linear slides to go through sets. so like motor encoders
 
             while (true) {
-                rightgripperDrive.setPosition(gamepad2.right_stick_x);
-                leftgripperDrive.setPosition(gamepad2.left_stick_x);
-                //middleslideDrive.setPower(0);
+                //rightgripperDrive.setPosition(gamepad2.right_stick_x);
+                //leftgripperDrive.setPosition(gamepad2.left_stick_x);
+                middleslideDrive.setPower(0);
                 if (dpad_up == true && middleslideDrive.getCurrentPosition() <= 4000) {
                     if (middleslideDrive.getCurrentPosition() <= 4000) {
                         middleslideDrive.setPower(0.9);
@@ -124,16 +124,16 @@ public class Teleop extends LinearOpMode {
                     sensitivity = 0.3;
                 }
 
-               /* if (rBPress == true) {
-                    rightgripperDrive.setPosition(-1);
-                    leftgripperDrive.setPosition(-1);
+                if (rBPress == true) {
+                    //rightgripperDrive.setPosition(1);
+                    leftgripperDrive.setPosition(0.1);
 
-                }*/
+                }
 
-               /* if (lBPress == true) {
-                    rightgripperDrive.setPosition(1);
+                if (lBPress == true) {
+                    //rightgripperDrive.setPosition(0);
                     leftgripperDrive.setPosition(1);
-                }*/
+                }
 
                 double vertical;
                 double horizontal;
