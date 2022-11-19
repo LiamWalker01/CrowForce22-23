@@ -73,6 +73,8 @@ public class Teleop extends LinearOpMode {
         frontrightDrive.setDirection(DcMotor.Direction.REVERSE);
         backleftDrive.setDirection(DcMotor.Direction.FORWARD);
         backrightDrive.setDirection(DcMotor.Direction.REVERSE);
+        rightgripperDrive.setDirection(Servo.Direction.FORWARD);
+        leftgripperDrive.setDirection(Servo.Direction.REVERSE);
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
         runtime.reset();
@@ -89,22 +91,32 @@ public class Teleop extends LinearOpMode {
 
             rBPress = gamepad2.right_bumper;
             lBPress = gamepad2.left_bumper;
-            rightgripperDrive.setPosition(0);
-            leftgripperDrive.setPosition(0);
+            rightgripperDrive.setPosition(-0.25);
+            leftgripperDrive.setPosition(-0.25);
             middleslideDrive.setPower(0);
+            middleslideDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             //middleslideDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             //setting the linear slides to go through sets. so like motor encoders
 
             while (true) {
-                middleslideDrive.setPower(0);
-                if (dpad_up == true && middleslideDrive.getCurrentPosition() <= 4000)  {
-                    if (middleslideDrive.getCurrentPosition()<=4000) {middleslideDrive.setPower(0.85);}
+                rightgripperDrive.setPosition(gamepad2.right_stick_x);
+                leftgripperDrive.setPosition(gamepad2.left_stick_x);
+                //middleslideDrive.setPower(0);
+                if (dpad_up == true && middleslideDrive.getCurrentPosition() <= 4000) {
+                    if (middleslideDrive.getCurrentPosition() <= 4000) {
+                        middleslideDrive.setPower(0.9);
+                    }
 
                 }
-                if (dpad_down == true && middleslideDrive.getCurrentPosition() >= 100) {
+                if (dpad_down == true && middleslideDrive.getCurrentPosition() >= 70) {
 
-                    if (middleslideDrive.getCurrentPosition()>= 100) {middleslideDrive.setPower(-0.5);}
+                    if (middleslideDrive.getCurrentPosition() >= 70) {
+                        middleslideDrive.setPower(-0.5);
+                    }
 
+                }
+                if (dpad_down == false && dpad_up == false) {
+                    middleslideDrive.setPower(0);
                 }
 
 
@@ -112,17 +124,16 @@ public class Teleop extends LinearOpMode {
                     sensitivity = 0.3;
                 }
 
-                if (rBPress == true && clampClose == false) {
-                    rightgripperDrive.setPosition(-60);
-                    rightgripperDrive.setPosition(60);
-                    //wait(2);
-                    clampClose = true;
-                }
+               /* if (rBPress == true) {
+                    rightgripperDrive.setPosition(-1);
+                    leftgripperDrive.setPosition(-1);
 
-                if (rBPress == true && clampClose == true) {
-                    rightgripperDrive.setPosition(0);
-                    leftgripperDrive.setPosition(0);
-                }
+                }*/
+
+               /* if (lBPress == true) {
+                    rightgripperDrive.setPosition(1);
+                    leftgripperDrive.setPosition(1);
+                }*/
 
                 double vertical;
                 double horizontal;
@@ -141,12 +152,17 @@ public class Teleop extends LinearOpMode {
 
 
                 rBPress = gamepad2.right_bumper;
+                lBPress = gamepad2.left_bumper;
 
                 // Show the elapsed game time and wheel power.
                 telemetry.addData("Status", "Run Time: " + runtime.toString());
                 //telemetry.addData("Motors", "left (%.2f), right (%.2f)", pivot + (vertical+horizontal), pivot+ (-vertical-horizontal));
                 telemetry.addData("Right Bumber", "T/F:" + rBPress);
                 telemetry.addData("SlidePosition", "Encoders:" + middleslideDrive.getCurrentPosition());
+                telemetry.addData("Right Grips", "Position:" + rightgripperDrive.getPosition());
+                telemetry.addData("Left Grips", "Position:" + leftgripperDrive.getPosition());
+                telemetry.addData("Driver 2 Stick:", "Driver 2 Left: " + gamepad2.right_stick_x);
+                telemetry.addData("Driver 2 Stick:", "Driver 2 Left: " + gamepad2.left_stick_x);
                 telemetry.update();
             }
         }
