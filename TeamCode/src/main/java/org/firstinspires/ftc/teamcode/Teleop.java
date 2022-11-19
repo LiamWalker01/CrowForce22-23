@@ -4,8 +4,12 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
+
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 
 /**
@@ -32,9 +36,12 @@ public class Teleop extends LinearOpMode {
     private DcMotor backleftDrive = null;
     private DcMotor backrightDrive = null;
     private DcMotor middleslideDrive = null;
+    private Servo rightgripperDrive = null;
+    private Servo leftgripperDrive = null;
+
 
     //@Override
-    public void runOpMode() {
+    public void runOpMode() throws InterruptedException {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
@@ -46,14 +53,20 @@ public class Teleop extends LinearOpMode {
         backleftDrive  = hardwareMap.get(DcMotor.class, "back_left_drive");
         backrightDrive = hardwareMap.get(DcMotor.class, "back_right_drive");
         middleslideDrive = hardwareMap.get(DcMotor.class, "middle_slides_drive");
+        rightgripperDrive = hardwareMap.get(Servo.class, "right_gripper_drive");
+        leftgripperDrive = hardwareMap.get(Servo.class, "left_gripper_drive");
+        //DistanceSensor frontDistance = hardwareMap.get(DistanceSensor.class, "front_distance");
         Boolean dpad_up = false;
         Boolean dpad_down = false;
-        Boolean dpad_right = false;
-        Boolean dpad_left = false;
+        //Boolean dpad_right = false;
+        //Boolean dpad_left = false;
         Boolean aPress = false;
         Boolean bPress = false;
         Boolean xPress = false;
         Boolean yPress = false;
+        Boolean rBPress = false;
+        Boolean lBPress = false;
+        Boolean clampClose = false;
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
         frontleftDrive.setDirection(DcMotor.Direction.FORWARD);
@@ -68,48 +81,61 @@ public class Teleop extends LinearOpMode {
         while (opModeIsActive()) {
 
 
-            double sensitivity = 1;
+            double sensitivity = .5;
             aPress = gamepad1.a;
             dpad_up = gamepad2.dpad_up;
             dpad_down = gamepad2.dpad_down;
-            dpad_right = gamepad2.dpad_right;
-            dpad_left = gamepad2.dpad_left;
+
+
+            rBPress = gamepad2.right_bumper;
+            lBPress = gamepad2.left_bumper;
+            rightgripperDrive.setPosition(0);
+            leftgripperDrive.setPosition(0);
             middleslideDrive.setPower(0);
-            if (dpad_up == true) {
-                middleslideDrive.setPower(1.0);
+            //setting the linear slides to go through sets. so like motor encoders
+
+            while(true) {
+                if (dpad_up == true) {
+                    middleslideDrive.setPower(1.0);
+                }
+                if (dpad_down == true) {
+                    middleslideDrive.setPower(-1);
+                }
+                if (aPress == true) {
+                    sensitivity = 0.3;
+                }
+
+                if (rBPress == true && clampClose == false) {
+                    rightgripperDrive.setPosition(60);
+                    rightgripperDrive.setPosition(-60);
+                    wait(20);
+                    clampClose = true;
+                }
+
+                if (rBPress == true && clampClose == true) {
+                 rightgripperDrive.setPosition(0);
+                 leftgripperDrive.setPosition(0);
+                }
+
+                double vertical;
+                double horizontal;
+                double pivot;
+
+
+                vertical = sensitivity * (-gamepad1.left_stick_y);
+                horizontal = sensitivity * (gamepad1.left_stick_x);
+                pivot = sensitivity * (gamepad1.right_stick_x);
+                frontrightDrive.setPower(pivot + (-vertical + horizontal));
+                frontleftDrive.setPower(-pivot + (-vertical - horizontal));
+                backleftDrive.setPower(-pivot + (-vertical + horizontal));
+                backrightDrive.setPower(pivot + (-vertical - horizontal));
+
+
+                // Show the elapsed game time and wheel power.
+                telemetry.addData("Status", "Run Time: " + runtime.toString());
+                //telemetry.addData("Motors", "left (%.2f), right (%.2f)", pivot + (vertical+horizontal), pivot+ (-vertical-horizontal));
+                telemetry.update();
             }
-            if(dpad_down == true){
-                middleslideDrive.setPower(-1);
-            }
-            if(dpad_left == true){
-                middleslideDrive.setPower(0.5);
-            }
-            if(dpad_right == true){
-                middleslideDrive.setPower(0.5);
-            }
-            if (aPress == true) {
-                sensitivity =  0.5;
-            }
-
-            double vertical;
-            double horizontal;
-            double pivot;
-
-
-            vertical = sensitivity*(- gamepad1.left_stick_y);
-            horizontal = sensitivity*(gamepad1.left_stick_x);
-            pivot = sensitivity*(gamepad1.right_stick_x);
-            frontrightDrive.setPower(pivot + (-vertical + horizontal));
-            frontleftDrive.setPower(-pivot + (-vertical - horizontal));
-            backleftDrive.setPower(-pivot + (-vertical + horizontal));
-            backrightDrive.setPower(pivot + (-vertical - horizontal));
-
-
-            // Show the elapsed game time and wheel power.
-            telemetry.addData("Status", "Run Time: " + runtime.toString());
-            //telemetry.addData("Motors", "left (%.2f), right (%.2f)", pivot + (vertical+horizontal), pivot+ (-vertical-horizontal));
-            telemetry.update();
-
         }
     }
 }
