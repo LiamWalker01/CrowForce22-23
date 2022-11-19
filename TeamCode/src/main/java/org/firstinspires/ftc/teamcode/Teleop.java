@@ -31,6 +31,7 @@ public class Teleop extends LinearOpMode {
     private DcMotor frontrightDrive = null;
     private DcMotor backleftDrive = null;
     private DcMotor backrightDrive = null;
+    private DcMotor middleslideDrive = null;
 
     //@Override
     public void runOpMode() {
@@ -44,6 +45,11 @@ public class Teleop extends LinearOpMode {
         frontrightDrive = hardwareMap.get(DcMotor.class, "front_right_drive");
         backleftDrive  = hardwareMap.get(DcMotor.class, "back_left_drive");
         backrightDrive = hardwareMap.get(DcMotor.class, "back_right_drive");
+        middleslideDrive = hardwareMap.get(DcMotor.class, "middle_slides_drive");
+        Boolean dpad_up = false;
+        Boolean dpad_down = false;
+        Boolean dpad_right = false;
+        Boolean dpad_left = false;
         Boolean aPress = false;
         Boolean bPress = false;
         Boolean xPress = false;
@@ -54,7 +60,7 @@ public class Teleop extends LinearOpMode {
         frontrightDrive.setDirection(DcMotor.Direction.REVERSE);
         backleftDrive.setDirection(DcMotor.Direction.FORWARD);
         backrightDrive.setDirection(DcMotor.Direction.REVERSE);
-// Wait for the game to start (driver presses PLAY)
+        // Wait for the game to start (driver presses PLAY)
         waitForStart();
         runtime.reset();
 
@@ -64,20 +70,39 @@ public class Teleop extends LinearOpMode {
 
             double sensitivity = 1;
             aPress = gamepad1.a;
+            dpad_up = gamepad2.dpad_up;
+            dpad_down = gamepad2.dpad_down;
+            dpad_right = gamepad2.dpad_right;
+            dpad_left = gamepad2.dpad_left;
+            middleslideDrive.setPower(0);
+            if (dpad_up == true) {
+                middleslideDrive.setPower(1.0);
+            }
+            if(dpad_down == true){
+                middleslideDrive.setPower(-1);
+            }
+            if(dpad_left == true){
+                middleslideDrive.setPower(0.5);
+            }
+            if(dpad_right == true){
+                middleslideDrive.setPower(0.5);
+            }
             if (aPress == true) {
-                sensitivity =  0.3;
+                sensitivity =  0.5;
             }
 
             double vertical;
             double horizontal;
             double pivot;
+
+
             vertical = sensitivity*(- gamepad1.left_stick_y);
             horizontal = sensitivity*(gamepad1.left_stick_x);
             pivot = sensitivity*(gamepad1.right_stick_x);
-            frontrightDrive.setPower(pivot + (-vertical+horizontal));
-            frontleftDrive.setPower(pivot + (-vertical-horizontal));
-            backleftDrive.setPower(pivot + (vertical + horizontal));
-            backrightDrive.setPower(pivot + (-vertical -horizontal));
+            frontrightDrive.setPower(pivot + (-vertical + horizontal));
+            frontleftDrive.setPower(-pivot + (-vertical - horizontal));
+            backleftDrive.setPower(-pivot + (-vertical + horizontal));
+            backrightDrive.setPower(pivot + (-vertical - horizontal));
 
 
             // Show the elapsed game time and wheel power.
