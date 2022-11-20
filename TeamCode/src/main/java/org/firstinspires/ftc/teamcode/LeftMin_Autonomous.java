@@ -3,14 +3,13 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "RightMin_Autonomous", group = "Linear OpMode" )
+@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "LeftMin_Autonomous", group = "Linear OpMode" )
 
 
 
-public class Autonomous extends LinearOpMode {
+public class LeftMin_Autonomous extends LinearOpMode {
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
     private DcMotor frontleftDrive = null;
@@ -19,38 +18,23 @@ public class Autonomous extends LinearOpMode {
     private DcMotor backrightDrive = null;
 
     @Override
-    public void runOpMode() throws InterruptedException{
-
+    public void runOpMode() {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
         frontleftDrive = hardwareMap.get(DcMotor.class, "front_left_drive");
         frontrightDrive = hardwareMap.get(DcMotor.class, "front_right_drive");
         backleftDrive = hardwareMap.get(DcMotor.class, "back_left_drive");
         backrightDrive = hardwareMap.get(DcMotor.class, "back_right_drive");
-        frontleftDrive.setDirection(DcMotorSimple.Direction.REVERSE);
-        frontrightDrive.setDirection(DcMotorSimple.Direction.FORWARD);
-        backleftDrive.setDirection(DcMotorSimple.Direction.REVERSE);
-        backrightDrive.setDirection(DcMotorSimple.Direction.FORWARD);
-
-        waitForStart();
-
-        double tile = 1000;
-        /*moveEncoders(0, 30, 0.1*tile);
-        moveEncoders(-90, 50, tile);
+        double tile = 32;
+        moveEncoders(0, 30, 0.1*tile);
+        moveEncoders(90, 50, tile);
         moveEncoders(0, 50, tile);
-        */
-        ElapsedTime matchTime = new ElapsedTime();
-      telemetry.addData("Run Time:", matchTime);
-      moveSimple(30,1);
-       /* moveTime(0, 30, 1);
-        moveTime(90, 30, 1);
-        moveTime(-90, 30, 1);
-        moveTime(-180, 30, 1);
-        */
-        //turnTime(-1, 2);
+        /* moveGyro( 0, 30, 2);
 
-        telemetry.update();
+        moveTime(0, 60, 3);
 
+
+         */
     }
 
     public void moveGyro(double angle, double speed, double distance) {
@@ -99,8 +83,8 @@ public class Autonomous extends LinearOpMode {
             while (frontrightDrive.getCurrentPosition() <= (angle/360)*348.5) {
                 frontleftDrive.setPower(speed);
                 backleftDrive.setPower(speed);
-                frontrightDrive.setPower(speed);
-                backrightDrive.setPower(speed);
+                frontrightDrive.setPower(-speed);
+                backrightDrive.setPower(-speed);
 
             }
 
@@ -117,8 +101,6 @@ public class Autonomous extends LinearOpMode {
     }
 
     public void moveTime(double angle, double speed, double time) {
-        //if (angle >= 0) {angle = angle-180;}
-        //if (angle<0) {angle = angle+180;}
         double sin = Math.sin(angle - Math.PI / 4);
         double cos = Math.cos(angle - Math.PI / 4);
         ElapsedTime movementTime = new ElapsedTime();
@@ -140,22 +122,20 @@ public class Autonomous extends LinearOpMode {
 
     public void turnTime(double direction, double time) {
         ElapsedTime movementTime = new ElapsedTime();
-        while (movementTime.time() < time*1000) {
-            frontleftDrive.setPower(direction);
+        while (movementTime.time() < time) {
+            frontleftDrive.setPower(-direction);
             frontrightDrive.setPower(direction);
-            backleftDrive.setPower(direction);
+            backleftDrive.setPower(-direction);
             backrightDrive.setPower(direction);
         }
     }
     public void moveSimple (double direction, double time) {
-        time = time*1;
         ElapsedTime movementTime = new ElapsedTime();
         while (movementTime.time() < time) {
             frontleftDrive.setPower(direction);
-            frontrightDrive.setPower(direction);
+            frontrightDrive.setPower(-direction);
             backleftDrive.setPower(direction);
-            backrightDrive.setPower(direction);
+            backrightDrive.setPower(-direction);
         }
     }
 }
-

@@ -73,7 +73,7 @@ public class Teleop extends LinearOpMode {
         frontrightDrive.setDirection(DcMotor.Direction.REVERSE);
         backleftDrive.setDirection(DcMotor.Direction.FORWARD);
         backrightDrive.setDirection(DcMotor.Direction.REVERSE);
-        rightgripperDrive.setDirection(Servo.Direction.FORWARD);
+        rightgripperDrive.setDirection(Servo.Direction.REVERSE);
         leftgripperDrive.setDirection(Servo.Direction.FORWARD);
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -91,10 +91,12 @@ public class Teleop extends LinearOpMode {
 
             rBPress = gamepad2.right_bumper;
             lBPress = gamepad2.left_bumper;
-            rightgripperDrive.setPosition(0);
-            leftgripperDrive.setPosition(1);
+            double gripperStartPosition = 0.1;
+            double gripperEndPosition = 0;
+            rightgripperDrive.setPosition(gripperStartPosition);
+            leftgripperDrive.setPosition(gripperStartPosition);
             middleslideDrive.setPower(0);
-            middleslideDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            //middleslideDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             //middleslideDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             //setting the linear slides to go through sets. so like motor encoders
 
@@ -125,14 +127,14 @@ public class Teleop extends LinearOpMode {
                 }
 
                 if (rBPress == true) {
-                    //rightgripperDrive.setPosition(1);
-                    leftgripperDrive.setPosition(0.1);
+                    rightgripperDrive.setPosition(gripperEndPosition);
+                    leftgripperDrive.setPosition(gripperEndPosition);
 
                 }
 
                 if (lBPress == true) {
-                    //rightgripperDrive.setPosition(0);
-                    leftgripperDrive.setPosition(1);
+                    rightgripperDrive.setPosition(gripperStartPosition);
+                    leftgripperDrive.setPosition(gripperStartPosition);
                 }
 
                 double vertical;
