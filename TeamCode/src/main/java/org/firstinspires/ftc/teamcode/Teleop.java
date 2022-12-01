@@ -122,10 +122,6 @@ public class Teleop extends LinearOpMode {
                 }
 
 
-                if (aPress == true) {
-                    sensitivity = 0.3;
-                }
-
                 if (rBPress == true) {
                     rightgripperDrive.setPosition(gripperEndPosition);
                     leftgripperDrive.setPosition(gripperEndPosition);
@@ -142,6 +138,11 @@ public class Teleop extends LinearOpMode {
                 double pivot;
 
 
+                //moves robot by using joystick position
+
+                if (aPress == true) {
+                    sensitivity = 0.01;
+                }
                 vertical = sensitivity * (-gamepad1.left_stick_y);
                 horizontal = sensitivity * (gamepad1.left_stick_x);
                 pivot = sensitivity * (gamepad1.right_stick_x);
