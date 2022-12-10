@@ -77,7 +77,7 @@ public class Teleop extends LinearOpMode {
         Boolean lBPress;
         boolean hasPressedUp = false;
         boolean hasPressedDown = false;
-        boolean automaticSlides = true;
+        boolean automaticSlides = false;
 
 
         // Define Movement Variables
