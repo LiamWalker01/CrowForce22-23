@@ -89,7 +89,7 @@ public class Teleop extends LinearOpMode {
         double gripperStartPosition = 0.1;
         double gripperEndPosition = 0;
 
-        // Define Motors
+        // Define Motors & starts intial values
         frontleftDrive.setDirection(DcMotor.Direction.FORWARD);
         frontrightDrive.setDirection(DcMotor.Direction.REVERSE);
         backleftDrive.setDirection(DcMotor.Direction.FORWARD);
@@ -101,13 +101,14 @@ public class Teleop extends LinearOpMode {
         waitForStart();
         runtime.reset();
 
+        // Stuff we want run once after start
+        rightgripperDrive.setPosition(gripperStartPosition);
+        leftgripperDrive.setPosition(gripperStartPosition);
+        middleslideDrive.setPower(0);
+
         // Run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
 
-            // Assigns dpad and left right buttons
-            rightgripperDrive.setPosition(gripperStartPosition);
-            leftgripperDrive.setPosition(gripperStartPosition);
-            middleslideDrive.setPower(0);
             //middleslideDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             //middleslideDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             //setting the linear slides to go through sets. so like motor encoders
@@ -115,6 +116,7 @@ public class Teleop extends LinearOpMode {
             //rightgripperDrive.setPosition(gamepad2.right_stick_x);
             //leftgripperDrive.setPosition(gamepad2.left_stick_x);
 
+            // Assign Variables to buttons
             dpad_up2 = gamepad2.dpad_up;
             dpad_up1 = gamepad1.dpad_up;
             dpad_down2 = gamepad2.dpad_down;
@@ -133,7 +135,6 @@ public class Teleop extends LinearOpMode {
             xPress2 = gamepad2.x;
 
             //slides code
-
             if(aPress2) {
                 automaticSlides = true;
             }
@@ -144,15 +145,16 @@ public class Teleop extends LinearOpMode {
                 slidesPosition = 0;
             }
 
-            if (automaticSlides == true) {
+            if (automaticSlides) {
+
                 // Sets predetermined location for slides
-                if (dpad_up2 && hasPressedUp == false) {
+                if (dpad_up2 && !hasPressedUp) {
                     slidesPosition += 1;
                     hasPressedUp = true;
-                } else if (dpad_down2 && hasPressedDown == false) {
+                } else if (dpad_down2 && !hasPressedDown) {
                     slidesPosition -= 1;
                     hasPressedDown = true;
-                } else if (dpad_up2 == false && dpad_down2 == false) {
+                } else if (!dpad_up2 && !dpad_down2) {
                     hasPressedUp = false;
                     hasPressedDown = false;
                 } else if (slidesPosition > 3) {
@@ -163,6 +165,13 @@ public class Teleop extends LinearOpMode {
 
                 // Moves Motor to set position
 
+                if ((slidesPosition == 0 && middleslideDrive.getCurrentPosition() != 70)) {
+                    if (middleslideDrive.getCurrentPosition() < 70) {
+                        middleslideDrive.setPower(-1);
+                    } else if (middleslideDrive.getCurrentPosition() > 70) {
+                        middleslideDrive.setPower(1);
+                    }
+                }
                 if ((slidesPosition == 1 && middleslideDrive.getCurrentPosition() != 1333)) {
                     if (middleslideDrive.getCurrentPosition() < 1333) {
                         middleslideDrive.setPower(-1);
@@ -170,78 +179,77 @@ public class Teleop extends LinearOpMode {
                         middleslideDrive.setPower(1);
                     }
                 }
-                if ((slidesPosition == 1 && middleslideDrive.getCurrentPosition() != 2666)) {
+                if ((slidesPosition == 2 && middleslideDrive.getCurrentPosition() != 2666)) {
                     if (middleslideDrive.getCurrentPosition() < 2666) {
                         middleslideDrive.setPower(-1);
                     } else if (middleslideDrive.getCurrentPosition() > 2666) {
                         middleslideDrive.setPower(1);
                     }
                 }
-                if ((slidesPosition == 1 && middleslideDrive.getCurrentPosition() != 4000)) {
+                if ((slidesPosition == 3 && middleslideDrive.getCurrentPosition() != 4000)) {
                     if (middleslideDrive.getCurrentPosition() < 4000) {
                         middleslideDrive.setPower(-1);
                     } else if (middleslideDrive.getCurrentPosition() > 4000) {
                         middleslideDrive.setPower(1);
                     }
                 }
-
-            } else if (automaticSlides == false) {
+            } else if (!automaticSlides) {
                 middleslideDrive.setPower(0);
-                if (dpad_up2 == true && middleslideDrive.getCurrentPosition() <= 4000) {
+                if (dpad_up2 && middleslideDrive.getCurrentPosition() <= 4000) {
 
                     if (middleslideDrive.getCurrentPosition() <= 4000) {
                         middleslideDrive.setPower(1);
                     }
                 }
-                if (dpad_down2 == true && middleslideDrive.getCurrentPosition() >= 70) {
+                if (dpad_down2 && middleslideDrive.getCurrentPosition() >= 70) {
 
                     if (middleslideDrive.getCurrentPosition() >= 70) {
                         middleslideDrive.setPower(-1);
                     }
                 }
-                if (dpad_down2 == false && dpad_up2 == false) {
+                if (!dpad_down2 && !dpad_up2) {
                     middleslideDrive.setPower(0);
                 }
             }
 
 
-            if (rBPress == true) {
+            if (rBPress) {
                 rightgripperDrive.setPosition(gripperEndPosition);
                 leftgripperDrive.setPosition(gripperEndPosition);
             }
 
-            if (lBPress == true) {
+            if (lBPress) {
                 rightgripperDrive.setPosition(gripperStartPosition);
                 leftgripperDrive.setPosition(gripperStartPosition);
             }
 
+
             // Moves robot by using joystick position
-            // A and B button changes sensitivity
-
-
-
+            // A and B button changes power
             if (yPress1) {
                 power = 1;
             } else if (aPress1) {
                 power = .5;
             }
 
-            vertical = (-gamepad1.left_stick_y);
-            horizontal = (gamepad1.left_stick_x);
-            pivot = (gamepad1.right_stick_x);
+            vertical = -gamepad1.left_stick_y;
+            horizontal = gamepad1.left_stick_x;
+            pivot = gamepad1.right_stick_x;
 
             frontrightDrive.setPower(power * (pivot + (-vertical + horizontal)));
             frontleftDrive.setPower(power * (-pivot + (-vertical - horizontal)));
             backleftDrive.setPower(power * (-pivot + (-vertical + horizontal)));
             backrightDrive.setPower(power * (pivot + (-vertical - horizontal)));
 
+            // Telemetry
             // Show the run time, slide position, right & left grips, left & right driver stick, power
-            telemetry.addData("Status", "Run Time: " + runtime.toString());
-            telemetry.addData("SlidePosition", "Encoders:" + middleslideDrive.getCurrentPosition());
-            telemetry.addData("slidesPositionState", "Variable: " + slidesPosition);
+            telemetry.addData("Run Time", runtime.toString());
+            telemetry.addData("Slide Encoder Position", middleslideDrive.getCurrentPosition());
+            telemetry.addData("Slides Automatic", automaticSlides);
+            telemetry.addData("Slides State", slidesPosition + "nth Position");
             telemetry.addData("Right Grips", "Position:" + rightgripperDrive.getPosition());
             telemetry.addData("Left Grips", "Position:" + leftgripperDrive.getPosition());
-            telemetry.addData("Power is:", power);
+            telemetry.addData("Power is multiplied by", power);
             telemetry.update();
             //telemetry.addData("Driver 2 Stick:", "Right: " + gamepad2.right_stick_x);
             //telemetry.addData("Driver 2 Stick:", "Left: " + gamepad2.left_stick_x);
