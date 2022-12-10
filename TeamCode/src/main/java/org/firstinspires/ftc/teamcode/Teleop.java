@@ -66,6 +66,7 @@ public class Teleop extends LinearOpMode {
         Boolean yPress = false;
         Boolean rBPress = false;
         Boolean lBPress = false;
+        double sensitivity = 0;
         Boolean clampClose = false;
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
@@ -82,9 +83,8 @@ public class Teleop extends LinearOpMode {
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
 
-
-            double sensitivity = .5;
             aPress = gamepad1.a;
+            bPress = gamepad1.b;
             dpad_up = gamepad2.dpad_up;
             dpad_down = gamepad2.dpad_down;
 
@@ -139,17 +139,30 @@ public class Teleop extends LinearOpMode {
 
 
                 //moves robot by using joystick position
+                aPress = gamepad1.a;
+                bPress = gamepad1.b;
 
-                if (aPress == true) {
-                    sensitivity = 0.01;
+                if (aPress) {
+                    sensitivity = 0.5;
                 }
-                vertical = sensitivity * (-gamepad1.left_stick_y);
-                horizontal = sensitivity * (gamepad1.left_stick_x);
-                pivot = sensitivity * (gamepad1.right_stick_x);
-                frontrightDrive.setPower(pivot + (-vertical + horizontal));
-                frontleftDrive.setPower(-pivot + (-vertical - horizontal));
-                backleftDrive.setPower(-pivot + (-vertical + horizontal));
-                backrightDrive.setPower(pivot + (-vertical - horizontal));
+                if (bPress) {
+                    sensitivity = 1;
+                }
+                vertical = (-gamepad1.left_stick_y);
+                horizontal = (gamepad1.left_stick_x);
+                pivot = (gamepad1.right_stick_x);
+
+                frontrightDrive.setPower(sensitivity * (pivot + (-vertical + horizontal)));
+                frontleftDrive.setPower(sensitivity * (-pivot + (-vertical - horizontal)));
+                backleftDrive.setPower(sensitivity * (-pivot + (-vertical + horizontal)));
+                backrightDrive.setPower(sensitivity * (pivot + (-vertical - horizontal)));
+
+                telemetry.addData("Sensitivity", "is: " + sensitivity);
+                telemetry.addData("Motor 1 Power", "is: " + sensitivity * (pivot + (-vertical + horizontal)));
+                telemetry.addData("Motor 2 Power", "is: " + sensitivity * (-pivot + (-vertical - horizontal)));
+                telemetry.addData("Motor 3 Power", "is: " + sensitivity * (-pivot + (-vertical + horizontal)));
+                telemetry.addData("Motor 4 Power", "is: " + sensitivity * (pivot + (-vertical - horizontal)));
+
                 dpad_up = gamepad2.dpad_up;
                 dpad_down = gamepad2.dpad_down;
 
