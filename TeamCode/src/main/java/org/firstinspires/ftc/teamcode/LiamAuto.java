@@ -21,8 +21,9 @@ public class LiamAuto extends LinearOpMode {
     private DcMotor middleslideDrive = null;
     private Servo rightgripperDrive = null;
     private Servo leftgripperDrive = null;
+
     @Override
-    public void runOpMode() throws InterruptedException{
+    public void runOpMode() throws InterruptedException {
 
         telemetry.addData("Status", "Initialized");
         telemetry.update();
@@ -35,7 +36,18 @@ public class LiamAuto extends LinearOpMode {
         frontrightDrive.setDirection(DcMotorSimple.Direction.FORWARD);
         backleftDrive.setDirection(DcMotorSimple.Direction.FORWARD);
         backrightDrive.setDirection(DcMotorSimple.Direction.REVERSE);
+        middleslideDrive.setDirection((DcMotorSimple.Direction.REVERSE));
         middleslideDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        frontleftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        frontrightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        backleftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        backrightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        middleslideDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        frontleftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        frontrightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        backleftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        backrightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        middleslideDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         waitForStart();
 
@@ -45,7 +57,8 @@ public class LiamAuto extends LinearOpMode {
         telemetry.addData("Run Time:", matchTime);
         telemetry.update();
 
-        moveSimpleByEncoder(.5,1000,1);
+        moveSimpleByEncoder(.5, 1000, 1);
+        moveSimpleSlidesByLevel(1, 3);
 
     }
 
@@ -77,4 +90,29 @@ public class LiamAuto extends LinearOpMode {
 
     }
 
+    public void moveSimpleSlidesByLevel(double power, double level) {
+
+        double position = 0;
+        if (level == 1) {
+            position = 70;
+        }
+        if (level == 2) {
+            position = 2000;
+        }
+        if (level == 3) {
+            position = 4000;
+        }
+        if (middleslideDrive.getCurrentPosition() < position) {
+            while (middleslideDrive.getCurrentPosition() < position) {
+                middleslideDrive.setPower(power);
+                telemetry.update();
+            }
+        }
+        if (middleslideDrive.getCurrentPosition() > position) {
+            while (middleslideDrive.getCurrentPosition() > position) {
+                middleslideDrive.setPower(-power);
+                telemetry.update();
+            }
+        }
+    }
 }
