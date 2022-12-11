@@ -40,7 +40,7 @@ public class LeftMin_Autonomous extends LinearOpMode {
         telemetry.addData("Run Time:", matchTime);
 
         //moveSimple(30,1);
-        moveEncoders(90,30,100);
+        moveEncoders(0,0.5,100);
         //moveEncoders(90,30,1000);
 
         telemetry.update();
@@ -62,7 +62,8 @@ public class LeftMin_Autonomous extends LinearOpMode {
         frontrightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backleftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backrightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        double theta = -angle + 90;
+        //double theta = -angle + 90;
+        double theta = angle;
         theta = theta + 45;
         double y_distance = Math.sin(theta)*distance;
         double x_distance = Math.cos(theta)*distance;
@@ -76,12 +77,14 @@ public class LeftMin_Autonomous extends LinearOpMode {
         double lBpos = x_directionCoefficient*backleftDrive.getCurrentPosition();
         double rFpos = x_directionCoefficient*frontrightDrive.getCurrentPosition();
         double rBpos = y_directionCoefficient*backrightDrive.getCurrentPosition();
-
+        telemetry.addData("frontRight",frontrightDrive.getCurrentPosition());
         while (lFpos < y_distance && lBpos<x_distance && rBpos < y_distance && rFpos < x_distance ) {
             frontleftDrive.setPower(y_speed);
             frontrightDrive.setPower(x_speed);
             backleftDrive.setPower(x_speed);
             backrightDrive.setPower(y_speed);
+            telemetry.update();
+
         }
 
         if (lFpos >= y_distance && lBpos >= x_distance && rBpos >= y_distance && rFpos >= x_distance ) {
