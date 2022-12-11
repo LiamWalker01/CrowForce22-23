@@ -34,20 +34,16 @@ public class Autonomous extends LinearOpMode {
 
         waitForStart();
 
-        double tile = 1000;
-        /*moveEncoders(0, 30, 0.1*tile);
-        moveEncoders(-90, 50, tile);
-        moveEncoders(0, 50, tile);
-        */
+        double tile = 300;
+
         ElapsedTime matchTime = new ElapsedTime();
       telemetry.addData("Run Time:", matchTime);
+      //moveSimpleEnc(1,0.3,tile);
       moveSimple(30,1);
-       /* moveTime(0, 30, 1);
-        moveTime(90, 30, 1);
-        moveTime(-90, 30, 1);
-        moveTime(-180, 30, 1);
-        */
-        //turnTime(-1, 2);
+      //moveEncoders(90,30,1000);
+      //moveEncoders(90,30,1000);
+        //moveSimpleEnc(1,0.3, 2*tile);
+        //turnSimple(1,0.2,100);
 
         telemetry.update();
 
@@ -60,6 +56,7 @@ public class Autonomous extends LinearOpMode {
     }
 
     public void moveEncoders(double angle, double speed, double distance) {
+        angle = angle*Math.PI/180;
         frontleftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         frontrightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         backleftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -72,10 +69,10 @@ public class Autonomous extends LinearOpMode {
         double cos = Math.cos(angle - Math.PI / 4);
 
         while (frontrightDrive.getCurrentPosition() <= distance * sin) {
-            frontleftDrive.setPower(speed * cos);
-            frontrightDrive.setPower(speed * sin);
-            backleftDrive.setPower(speed * sin);
+            frontleftDrive.setPower(speed * sin);
+            frontrightDrive.setPower(speed * cos);
             backleftDrive.setPower(speed * cos);
+            backleftDrive.setPower(speed * sin);
         }
         if (frontrightDrive.getCurrentPosition() > distance * sin) {
             frontleftDrive.setPower(0);
@@ -155,6 +152,103 @@ public class Autonomous extends LinearOpMode {
             frontrightDrive.setPower(direction);
             backleftDrive.setPower(direction);
             backrightDrive.setPower(direction);
+        }
+    }
+    public void moveSimpleEnc(double direction, double speed, double distance) {
+        frontleftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        frontrightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        backleftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        backrightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        frontleftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        frontrightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        backleftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        backrightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        boolean backwards = false;
+        if (direction < 0) {
+            backwards = true;
+        }
+
+
+        if (backwards = true) {
+            while (frontleftDrive.getCurrentPosition() > -distance) {
+                frontleftDrive.setPower(-speed);
+                backrightDrive.setPower(speed);
+                backleftDrive.setPower(speed);
+                frontrightDrive.setPower(-speed);
+            }
+
+        }
+
+        if (backwards = false) {
+            while (frontleftDrive.getCurrentPosition() < distance) {
+                frontleftDrive.setPower(speed);
+                backrightDrive.setPower(-speed);
+                backleftDrive.setPower(-speed);
+                frontrightDrive.setPower(speed);
+            }
+
+        }
+    }
+    public void strafeSimple(double direction, double speed, double distance) {
+        frontleftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        frontrightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        backleftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        backrightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        frontleftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        frontrightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        backleftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        backrightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        boolean left = false;
+        if (direction < 0) {left = true;}
+
+        if (left = true) {
+            while (frontleftDrive.getCurrentPosition() > -distance) {
+                frontleftDrive.setPower(-speed);
+                backrightDrive.setPower(speed);
+                backleftDrive.setPower(speed);
+                frontrightDrive.setPower(-speed);
+            }
+
+        }
+
+        if(left = false) {
+            while (frontleftDrive.getCurrentPosition() < distance) {
+                frontleftDrive.setPower(speed);
+                backrightDrive.setPower(-speed);
+                backleftDrive.setPower(-speed);
+                frontrightDrive.setPower(speed);
+            }
+        }
+    }
+    public void turnSimple(double direction, double speed, double distance) {
+        frontleftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        frontrightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        backleftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        backrightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        frontleftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        frontrightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        backleftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        backrightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        boolean left = false;
+        if (direction < 0) {left = true;}
+
+        if (left = true) {
+            while (frontleftDrive.getCurrentPosition() > -distance) {
+                frontleftDrive.setPower(-speed);
+                backrightDrive.setPower(speed);
+                backleftDrive.setPower(-speed);
+                frontrightDrive.setPower(speed);
+            }
+
+        }
+
+        if(left = false) {
+            while (frontleftDrive.getCurrentPosition() < distance) {
+                frontleftDrive.setPower(speed);
+                backrightDrive.setPower(-speed);
+                backleftDrive.setPower(speed);
+                frontrightDrive.setPower(-speed);
+            }
         }
     }
 }

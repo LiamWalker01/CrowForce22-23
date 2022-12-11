@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 
-@Autonomous(name = "KiranAuto", group = "Teleops")
+@Autonomous(name = "KiranandLiamAuto", group = "Teleops")
 
 public class KiranandLiamautoew  extends LinearOpMode {
 
