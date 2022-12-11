@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -52,7 +53,7 @@ public class Teleop extends LinearOpMode {
         frontrightDrive = hardwareMap.get(DcMotor.class, "front_right_drive");
         backleftDrive = hardwareMap.get(DcMotor.class, "back_left_drive");
         backrightDrive = hardwareMap.get(DcMotor.class, "back_right_drive");
-        middleslideDrive = hardwareMap.get(DcMotor.class, "middle_slides_drive");
+        middleslideDrive= hardwareMap.get(DcMotor.class, "middle_slides_drive");
         rightgripperDrive = hardwareMap.get(Servo.class, "right_gripper_drive");
         leftgripperDrive = hardwareMap.get(Servo.class, "left_gripper_drive");
         // DistanceSensor frontDistance = hardwareMap.get(DistanceSensor.class, "front_distance");
@@ -69,10 +70,10 @@ public class Teleop extends LinearOpMode {
         Boolean xPress2;
         Boolean yPress2;
         Boolean clampClose;
-        Boolean dpad_up1;
-        Boolean dpad_up2;
-        Boolean dpad_down1;
-        Boolean dpad_down2;
+        Boolean dpad_up1 = false;
+        Boolean dpad_up2 = false;
+        Boolean dpad_down1 = false;
+        Boolean dpad_down2 = false;
         Boolean rBPress;
         Boolean lBPress;
         boolean hasPressedUp = false;
@@ -86,8 +87,13 @@ public class Teleop extends LinearOpMode {
         double vertical;
         double horizontal;
         double pivot;
-        double gripperStartPosition = 0.1;
-        double gripperEndPosition = 0;
+        double gripperStartPositionLeft = 0.1;
+        double gripperStartPositionRight = 0.2;
+        double gripperEndPositionLeft = -.1;
+        double gripperEndPositionRight = 0;
+
+
+
 
         // Define Motors & starts intial values
         frontleftDrive.setDirection(DcMotor.Direction.FORWARD);
@@ -96,21 +102,22 @@ public class Teleop extends LinearOpMode {
         backrightDrive.setDirection(DcMotor.Direction.REVERSE);
         rightgripperDrive.setDirection(Servo.Direction.REVERSE);
         leftgripperDrive.setDirection(Servo.Direction.FORWARD);
+        middleslideDrive.setDirection(DcMotor.Direction.FORWARD);
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
         runtime.reset();
 
         // Stuff we want run once after start
-        rightgripperDrive.setPosition(gripperStartPosition);
-        leftgripperDrive.setPosition(gripperStartPosition);
-        middleslideDrive.setPower(0);
+        rightgripperDrive.setPosition(gripperStartPositionRight);
+        leftgripperDrive.setPosition(gripperStartPositionLeft);
+        double slidesInitialPosition = middleslideDrive.getCurrentPosition();
 
         // Run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
 
             //middleslideDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            //middleslideDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
             //setting the linear slides to go through sets. so like motor encoders
 
             //rightgripperDrive.setPosition(gamepad2.right_stick_x);
@@ -135,7 +142,7 @@ public class Teleop extends LinearOpMode {
             xPress2 = gamepad2.x;
 
             //slides code
-            if(aPress2) {
+            if (aPress2) {
                 automaticSlides = true;
             }
             if (yPress2) {
@@ -145,84 +152,37 @@ public class Teleop extends LinearOpMode {
                 slidesPosition = 0;
             }
 
-            if (automaticSlides) {
+            //middleslideDrive.setPower(0);
 
-                // Sets predetermined location for slides
-                if (dpad_up2 && !hasPressedUp) {
-                    slidesPosition += 1;
-                    hasPressedUp = true;
-                } else if (dpad_down2 && !hasPressedDown) {
-                    slidesPosition -= 1;
-                    hasPressedDown = true;
-                } else if (!dpad_up2 && !dpad_down2) {
-                    hasPressedUp = false;
-                    hasPressedDown = false;
-                } else if (slidesPosition > 3) {
-                    slidesPosition = 3;
-                } else if (slidesPosition < 0) {
-                    slidesPosition = 0;
-                }
 
-                // Moves Motor to set position
+            if (dpad_up2) {
 
-                if ((slidesPosition == 0 && middleslideDrive.getCurrentPosition() != 70)) {
-                    if (middleslideDrive.getCurrentPosition() < 70) {
-                        middleslideDrive.setPower(-1);
-                    } else if (middleslideDrive.getCurrentPosition() > 70) {
-                        middleslideDrive.setPower(1);
-                    }
-                }
-                if ((slidesPosition == 1 && middleslideDrive.getCurrentPosition() != 1333)) {
-                    if (middleslideDrive.getCurrentPosition() < 1333) {
-                        middleslideDrive.setPower(-1);
-                    } else if (middleslideDrive.getCurrentPosition() > 1333) {
-                        middleslideDrive.setPower(1);
-                    }
-                }
-                if ((slidesPosition == 2 && middleslideDrive.getCurrentPosition() != 2666)) {
-                    if (middleslideDrive.getCurrentPosition() < 2666) {
-                        middleslideDrive.setPower(-1);
-                    } else if (middleslideDrive.getCurrentPosition() > 2666) {
-                        middleslideDrive.setPower(1);
-                    }
-                }
-                if ((slidesPosition == 3 && middleslideDrive.getCurrentPosition() != 4000)) {
-                    if (middleslideDrive.getCurrentPosition() < 4000) {
-                        middleslideDrive.setPower(-1);
-                    } else if (middleslideDrive.getCurrentPosition() > 4000) {
-                        middleslideDrive.setPower(1);
-                    }
-                }
-            } else if (!automaticSlides) {
-                middleslideDrive.setPower(0);
-                if (dpad_up2 && middleslideDrive.getCurrentPosition() <= 4000) {
-
-                    if (middleslideDrive.getCurrentPosition() <= 4000) {
-                        middleslideDrive.setPower(1);
-                    }
-                }
-                if (dpad_down2 && middleslideDrive.getCurrentPosition() >= 70) {
-
-                    if (middleslideDrive.getCurrentPosition() >= 70) {
-                        middleslideDrive.setPower(-1);
-                    }
-                }
-                if (!dpad_down2 && !dpad_up2) {
-                    middleslideDrive.setPower(0);
+                if (middleslideDrive.getCurrentPosition() <= slidesInitialPosition + 4000) {
+                    middleslideDrive.setPower(-1);
                 }
             }
+
+            if (dpad_down2) {
+                if (middleslideDrive.getCurrentPosition() >= slidesInitialPosition) {
+                    middleslideDrive.setPower(1);
+                }
+            }
+
+            if (!dpad_down2 && !dpad_up2) {
+                    middleslideDrive.setPower(0);
+            }
+
 
 
             if (rBPress) {
-                rightgripperDrive.setPosition(gripperEndPosition);
-                leftgripperDrive.setPosition(gripperEndPosition);
+                rightgripperDrive.setPosition(gripperEndPositionRight);
+                leftgripperDrive.setPosition(gripperEndPositionLeft);
             }
 
             if (lBPress) {
-                rightgripperDrive.setPosition(gripperStartPosition);
-                leftgripperDrive.setPosition(gripperStartPosition);
+                rightgripperDrive.setPosition(gripperStartPositionRight);
+                leftgripperDrive.setPosition(gripperStartPositionLeft);
             }
-
 
             // Moves robot by using joystick position
             // A and B button changes power
@@ -247,6 +207,7 @@ public class Teleop extends LinearOpMode {
             telemetry.addData("Slide Encoder Position", middleslideDrive.getCurrentPosition());
             telemetry.addData("Slides Automatic", automaticSlides);
             telemetry.addData("Slides State", slidesPosition + "nth Position");
+            telemetry.addData("Intial Position", slidesInitialPosition);
             telemetry.addData("Right Grips", "Position:" + rightgripperDrive.getPosition());
             telemetry.addData("Left Grips", "Position:" + leftgripperDrive.getPosition());
             telemetry.addData("Power is multiplied by", power);
@@ -259,7 +220,55 @@ public class Teleop extends LinearOpMode {
             //telemetry.addData("Motor 4 Power is:", power * (pivot + (-vertical - horizontal)));
             //telemetry.addData("Right Bumper", "T/F:" + rBPress);
             // telemetry.addData("Motors", "left (%.2f), right (%.2f)", pivot + (vertical+horizontal), pivot+ (-vertical-horizontal));
+             /* if (automaticSlides) {
 
+                // Sets predetermined location for slides
+                if (dpad_up2 && !hasPressedUp) {
+                    slidesPosition += 1;
+                    hasPressedUp = true;
+                } else if (dpad_down2 && !hasPressedDown) {
+                    slidesPosition -= 1;
+                    hasPressedDown = true;
+                } else if (!dpad_up2 && !dpad_down2) {
+                    hasPressedUp = false;
+                    hasPressedDown = false;
+                } else if (slidesPosition > 3) {
+                    slidesPosition = 3;
+                } else if (slidesPosition < 0) {
+                    slidesPosition = 0;
+                }
+
+                // Moves Motor to set position
+
+                if (slidesPosition == 0) {
+                    if (middleslideDrive.getCurrentPosition() < slidesPosition) {
+                        middleslideDrive.setPower(1);
+                    } else if (middleslideDrive.getCurrentPosition() > slidesPosition + 10) {
+                        middleslideDrive.setPower(-1);
+                    }
+                }
+                if (slidesPosition == 1) {
+                    if (middleslideDrive.getCurrentPosition() < slidesInitialPosition + 1323) {
+                        middleslideDrive.setPower(1);
+                    } else if (middleslideDrive.getCurrentPosition() > slidesInitialPosition + 1333) {
+                        middleslideDrive.setPower(-1);
+                    }
+                }
+                if (slidesPosition == 2) {
+                    if (middleslideDrive.getCurrentPosition() < slidesInitialPosition + 2646) {
+                        middleslideDrive.setPower(1);
+                    } else if (middleslideDrive.getCurrentPosition() > slidesInitialPosition + 2666) {
+                        middleslideDrive.setPower(-1);
+                    }
+                }
+                if (slidesPosition == 3) {
+                    if (middleslideDrive.getCurrentPosition() < slidesInitialPosition + 3980) {
+                        middleslideDrive.setPower(1);
+                    } else if (middleslideDrive.getCurrentPosition() > slidesInitialPosition + 4000) {
+                        middleslideDrive.setPower(-1);
+                    }
+                }
+            } */
         }
     }
 }
