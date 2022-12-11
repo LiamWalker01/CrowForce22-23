@@ -40,7 +40,7 @@ public class LeftMin_Autonomous extends LinearOpMode {
         telemetry.addData("Run Time:", matchTime);
 
         //moveSimple(30,1);
-        moveEncoders(0,0.5,100);
+        moveEncoders(0,0.3,100);
         //moveEncoders(90,30,1000);
 
         telemetry.update();
@@ -65,6 +65,7 @@ public class LeftMin_Autonomous extends LinearOpMode {
         //double theta = -angle + 90;
         double theta = angle;
         theta = theta + 45;
+
         double y_distance = Math.sin(theta)*distance;
         double x_distance = Math.cos(theta)*distance;
         double y_speed = Math.sin(theta)*speed;
@@ -78,11 +79,17 @@ public class LeftMin_Autonomous extends LinearOpMode {
         double rFpos = x_directionCoefficient*frontrightDrive.getCurrentPosition();
         double rBpos = y_directionCoefficient*backrightDrive.getCurrentPosition();
         telemetry.addData("frontRight",frontrightDrive.getCurrentPosition());
+        telemetry.addData("y_distance: ", y_distance);
+        telemetry.addData("x_distance: ", x_distance);
         while (lFpos < y_distance && lBpos<x_distance && rBpos < y_distance && rFpos < x_distance ) {
             frontleftDrive.setPower(y_speed);
             frontrightDrive.setPower(x_speed);
             backleftDrive.setPower(x_speed);
             backrightDrive.setPower(y_speed);
+             lFpos = y_directionCoefficient*frontleftDrive.getCurrentPosition();
+           lBpos = x_directionCoefficient*backleftDrive.getCurrentPosition();
+           rFpos = x_directionCoefficient*frontrightDrive.getCurrentPosition();
+           rBpos = y_directionCoefficient*backrightDrive.getCurrentPosition();
             telemetry.update();
 
         }
