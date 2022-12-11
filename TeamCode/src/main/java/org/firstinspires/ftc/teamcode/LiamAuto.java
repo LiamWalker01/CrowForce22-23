@@ -49,7 +49,7 @@ public class LiamAuto extends LinearOpMode {
 
     }
 
-    public void moveSimpleByEncoder(int power, double distance, int direction) {
+    public void moveSimpleByEncoder(double power, double distance, int direction) {
         if (direction == 1 && frontleftDrive.getCurrentPosition() < distance) {
             frontleftDrive.setPower(power);
             frontrightDrive.setPower(power);
