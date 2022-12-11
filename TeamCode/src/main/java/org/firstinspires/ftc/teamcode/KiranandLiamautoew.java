@@ -34,24 +34,31 @@ public class KiranandLiamautoew  extends LinearOpMode {
         double speed = .5;
 
         waitForStart();
-        while (frontright.getCurrentPosition() < 4500) {
-            frontleft.setPower(-speed);
-            backright.setPower(speed);
-            backleft.setPower(-speed);
-            frontright.setPower(speed);
-        }
-        //moves straight
 
-        while (frontright.getCurrentPosition() < 5250) {
-            frontleft.setPower(-speed);
-            backright.setPower(speed);
-            backleft.setPower(speed);
-            frontright.setPower(-speed);
 
-        }
-        //moves up to be in postion to lower cone
-        //ARM
-        //ARM DOWN
+        while (opModeIsActive()) {
+
+            telemetry.addData("Front Right Encoder", frontright.getCurrentPosition());
+            telemetry.update();
+
+            if (frontright.getCurrentPosition() < 4500) {
+                frontleft.setPower(-speed);
+                backright.setPower(speed);
+                backleft.setPower(-speed);
+                frontright.setPower(speed);
+            }
+            //moves straight
+
+            if (frontright.getCurrentPosition() < 5250) {
+                frontleft.setPower(-speed);
+                backright.setPower(speed);
+                backleft.setPower(speed);
+                frontright.setPower(-speed);
+
+            }
+            //moves up to be in postion to lower cone
+            //ARM
+            //ARM DOWN
         /*while (frontright.getCurrentPosition() < 5300) {
             frontleft.setPower(-1);
             backright.setPower(1);
@@ -71,4 +78,11 @@ public class KiranandLiamautoew  extends LinearOpMode {
 */
 
         }
+
+
+        }
+
     }
+
+
+
