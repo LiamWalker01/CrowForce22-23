@@ -103,6 +103,7 @@ public class Teleop extends LinearOpMode {
         rightgripperDrive.setDirection(Servo.Direction.REVERSE);
         leftgripperDrive.setDirection(Servo.Direction.FORWARD);
         middleslideDrive.setDirection(DcMotor.Direction.FORWARD);
+        middleslideDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
