@@ -103,10 +103,7 @@ public class KiranAuto extends LinearOpMode {
             //goes left
             if (frontrightDrive.getCurrentPosition() < 6300) {
                 frontleftDrive.setPower(1);
-
                 backleftDrive.setPower(1);
-
-
             }
 
             //turns down
@@ -148,7 +145,7 @@ public class KiranAuto extends LinearOpMode {
             }
         }
     }
-private void moveStrafe(double direction, double speed, double distance) {
+    private void moveStrafe(double direction, double speed, double distance) {
 
         boolean left = false;
         if (direction < 0) {left = true;}
@@ -171,8 +168,5 @@ private void moveStrafe(double direction, double speed, double distance) {
                 frontrightDrive.setPower(speed);
             }
         }
-
-
-
-}
+    }
 }

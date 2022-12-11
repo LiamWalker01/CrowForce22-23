@@ -27,7 +27,7 @@ import static org.firstinspires.ftc.robotcore.external.navigation.AngleUnit.DEGR
 /**
  * feel free to change the name or group of your class to better fit your robot
  */
-@TeleOp(name = "LiamTestTeleop", group = "tutorial")
+@TeleOp(name = "LiamTestTeleop(FieldCentric)", group = "tutorial")
 public class LiamTestTeleop extends LinearOpMode {
 
     /**
