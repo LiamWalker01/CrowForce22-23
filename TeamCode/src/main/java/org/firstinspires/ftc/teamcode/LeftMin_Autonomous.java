@@ -86,6 +86,10 @@ public class LeftMin_Autonomous extends LinearOpMode {
             frontrightDrive.setPower(x_speed);
             backleftDrive.setPower(x_speed);
             backrightDrive.setPower(y_speed);
+             lFpos = y_directionCoefficient*frontleftDrive.getCurrentPosition();
+           lBpos = x_directionCoefficient*backleftDrive.getCurrentPosition();
+           rFpos = x_directionCoefficient*frontrightDrive.getCurrentPosition();
+           rBpos = y_directionCoefficient*backrightDrive.getCurrentPosition();
             telemetry.update();
 
         }
