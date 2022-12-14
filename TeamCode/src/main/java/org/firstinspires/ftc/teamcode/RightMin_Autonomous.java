@@ -6,11 +6,9 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "RightMin_Autonomous", group = "Linear OpMode" )
+@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "RightMin_Autonomous", group = "Drew's Autos" )
 
-
-
-public class Autonomous extends LinearOpMode {
+public class RightMin_Autonomous extends LinearOpMode {
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
     private DcMotor frontleftDrive = null;
@@ -37,12 +35,12 @@ public class Autonomous extends LinearOpMode {
         double tile = 300;
 
         ElapsedTime matchTime = new ElapsedTime();
-      telemetry.addData("Run Time:", matchTime);
-      //moveSimpleEnc(1,0.3,tile);
-      moveSimple(30,1);
-      //moveEncoders(90,30,1000);
-      //moveEncoders(90,30,1000);
-        //moveSimpleEnc(1,0.3, 2*tile);
+        telemetry.addData("Run Time:", matchTime);
+        //moveSimpleEnc(1,0.3,tile);
+        moveSimple(30,1);
+        //moveEncoders(90,30,1000);
+        //moveEncoders(90,30,1000)
+        // moveSimpleEnc(1,0.3, 2*tile);
         //turnSimple(1,0.2,100);
 
         telemetry.update();

@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 
-@TeleOp(name="Teleop", group="Linear Opmode")
+@TeleOp(name="Teleop", group="Teleop")
 //@Disabled
 public class Teleop extends LinearOpMode {
 

@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "RightMax_Autonomous", group = "Linear OpMode" )
+@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "RightMax_Autonomous", group = "Drew's Auto" )
 
 
 
