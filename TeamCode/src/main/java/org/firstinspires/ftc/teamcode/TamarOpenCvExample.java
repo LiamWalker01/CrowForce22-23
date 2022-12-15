@@ -1,4 +1,4 @@
 package org.firstinspires.ftc.teamcode;
 
-public class TamarOpenCvExample {
+public class TamarOpenCvExample extends OpenCvPipeline{
 }
