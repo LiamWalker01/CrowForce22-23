@@ -132,14 +132,14 @@ public class Teleop extends LinearOpMode {
             //middleslideDrive.setPower(0);
 
 
-            if (dpad_up2) {
+            if (dpad_up2 && middleslideDrive.getCurrentPosition() <= slidesInitialPosition + 4000) {
 
                 if (middleslideDrive.getCurrentPosition() <= slidesInitialPosition + 4000) {
                     middleslideDrive.setPower(-1);
                 }
             }
 
-            if (dpad_down2) {
+            if (dpad_down2 & middleslideDrive.getCurrentPosition() >= slidesInitialPosition) {
                 if (middleslideDrive.getCurrentPosition() >= slidesInitialPosition) {
                     middleslideDrive.setPower(1);
                 }
