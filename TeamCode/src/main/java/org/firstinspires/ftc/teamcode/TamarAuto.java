@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
-@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "RightMin_Autonomous", group = "Linear OpMode" )
+@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "RightMin_Autonomous", group = "Tamar's Autos" )
 
 public class TamarAuto extends LinearOpMode {
 
