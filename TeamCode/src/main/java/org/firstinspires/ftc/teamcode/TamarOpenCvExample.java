@@ -1,4 +1,1 @@
-package org.firstinspires.ftc.teamcode;
-
-public class TamarOpenCvExample extends OpenCvPipeline{
-}
+//color sensor open cv pipeline
