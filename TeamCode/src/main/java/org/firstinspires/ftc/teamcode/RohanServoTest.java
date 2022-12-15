@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -12,14 +11,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class RohanServoTest extends LinearOpMode {
 
     // Declare OpMode members.
-    private ElapsedTime runtime = new ElapsedTime();
-    private DcMotor frontleftDrive = null;
-    private DcMotor frontrightDrive = null;
-    private DcMotor backleftDrive = null;
-    private DcMotor backrightDrive = null;
-    private DcMotor middleslideDrive = null;
-    private Servo rightgripperDrive = null;
-    private Servo leftgripperDrive = null;
+    private final ElapsedTime runtime = new ElapsedTime();
 
 
     //@Override
@@ -27,14 +19,10 @@ public class RohanServoTest extends LinearOpMode {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
-
-        Boolean rBPress = false;
-        Boolean lBPress = false;
-
-        frontleftDrive.setDirection(DcMotor.Direction.FORWARD);
-        frontrightDrive.setDirection(DcMotor.Direction.REVERSE);
-        backleftDrive.setDirection(DcMotor.Direction.FORWARD);
-        backrightDrive.setDirection(DcMotor.Direction.REVERSE);
+        Servo rightGripperDrive = hardwareMap.get(Servo.class, "right_gripper_drive");
+        Servo leftGripperDrive = hardwareMap.get(Servo.class, "left_gripper_drive");
+        boolean rBPress;
+        boolean lBPress;
 
         waitForStart();
         runtime.reset();
@@ -45,15 +33,21 @@ public class RohanServoTest extends LinearOpMode {
             rBPress = gamepad2.right_bumper;
             lBPress = gamepad2.left_bumper;
 
-                if (lBPress  == true) {
-                    rightgripperDrive.setPosition(0);
-                    rightgripperDrive.setPosition(0);
+                if (lBPress) {
+                    rightGripperDrive.setPosition(0);
+                    leftGripperDrive.setPosition(0);
                 }
 
-                if (rBPress == true) {
-                    rightgripperDrive.setPosition(1);
-                    leftgripperDrive.setPosition(1);
+                if (rBPress) {
+                    rightGripperDrive.setPosition(1);
+                    leftGripperDrive.setPosition(1);
                 }
+
+            telemetry.addData("Right Servo Position", rightGripperDrive.getPosition());
+            telemetry.addData("Left Servo Position", leftGripperDrive.getPosition());
+            telemetry.addData("Left Button Press", lBPress);
+            telemetry.addData("Right Button Press", rBPress);
+            telemetry.update();
         }
     }
 }

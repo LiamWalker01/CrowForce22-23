@@ -5,7 +5,6 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.openftc.apriltag.AprilTagDetection;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
@@ -18,14 +17,8 @@ import java.util.ArrayList;
 
 public class LiamAuto extends LinearOpMode {
 
-    private ElapsedTime runtime = new ElapsedTime();
-    private DcMotor frontleftDrive = null;
-    private DcMotor frontrightDrive = null;
-    private DcMotor backleftDrive = null;
-    private DcMotor backrightDrive = null;
-    private DcMotor middleslideDrive = null;
-    private Servo rightgripperDrive = null;
-    private Servo leftgripperDrive = null;
+    private final ElapsedTime runtime = new ElapsedTime();
+    private DcMotor middleSlideDrive = null;
 
     double gripperStartPositionLeft = .9;
     double gripperStartPositionRight = .9;
@@ -47,13 +40,13 @@ public class LiamAuto extends LinearOpMode {
     double cy = 221.506;
 
     // UNITS ARE METERS
-    double tagsize = 0.166;
+    double tagSize = 0.166;
 
     int tagPosition = 0;
 
-    int ID_TAG_OF_INTEREST1 = 1; // Tag ID 1 from the 36h11 family
-    int ID_TAG_OF_INTEREST2 = 2; // Tag ID 2 from the 36h11 family
-    int ID_TAG_OF_INTEREST3 = 3; // Tag ID 3 from the 36h11 family
+    int tagOfInterest1 = 1; // Tag ID 1 from the 36h11 family
+    int tagOfInterest2 = 2; // Tag ID 2 from the 36h11 family
+    int tagOfInterest3 = 3; // Tag ID 3 from the 36h11 family
 
     AprilTagDetection tagOfInterest = null;
 
@@ -61,14 +54,14 @@ public class LiamAuto extends LinearOpMode {
     public void runOpMode()
     {
         // Motors and Servos
-        frontleftDrive = hardwareMap.get(DcMotor.class, "front_left_drive");
-        frontrightDrive = hardwareMap.get(DcMotor.class, "front_right_drive");
-        backleftDrive = hardwareMap.get(DcMotor.class, "back_left_drive");
-        backrightDrive = hardwareMap.get(DcMotor.class, "back_right_drive");
-        middleslideDrive= hardwareMap.get(DcMotor.class, "middle_slides_drive");
+        DcMotor frontleftDrive = hardwareMap.get(DcMotor.class, "front_left_drive");
+        DcMotor frontrightDrive = hardwareMap.get(DcMotor.class, "front_right_drive");
+        DcMotor backleftDrive = hardwareMap.get(DcMotor.class, "back_left_drive");
+        DcMotor backrightDrive = hardwareMap.get(DcMotor.class, "back_right_drive");
+        middleSlideDrive = hardwareMap.get(DcMotor.class, "middle_slides_drive");
 
-        rightgripperDrive = hardwareMap.get(Servo.class, "right_gripper_drive");
-        leftgripperDrive = hardwareMap.get(Servo.class, "left_gripper_drive");
+        Servo rightgripperDrive = hardwareMap.get(Servo.class, "right_gripper_drive");
+        Servo leftgripperDrive = hardwareMap.get(Servo.class, "left_gripper_drive");
 
         frontleftDrive.setDirection(DcMotor.Direction.FORWARD);
         frontrightDrive.setDirection(DcMotor.Direction.REVERSE);
@@ -76,19 +69,19 @@ public class LiamAuto extends LinearOpMode {
         backrightDrive.setDirection(DcMotor.Direction.REVERSE);
         rightgripperDrive.setDirection(Servo.Direction.REVERSE);
         leftgripperDrive.setDirection(Servo.Direction.FORWARD);
-        middleslideDrive.setDirection(DcMotor.Direction.FORWARD);
-        middleslideDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        middleSlideDrive.setDirection(DcMotor.Direction.FORWARD);
+        middleSlideDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontleftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         frontrightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         backleftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         backrightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        middleslideDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        middleSlideDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         frontleftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         frontrightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backleftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backrightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        middleslideDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        middleSlideDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         rightgripperDrive.setPosition(gripperStartPositionRight);
         leftgripperDrive.setPosition(gripperStartPositionLeft);
@@ -96,7 +89,7 @@ public class LiamAuto extends LinearOpMode {
         //Camera
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         OpenCvCamera camera = OpenCvCameraFactory.getInstance().createInternalCamera(OpenCvInternalCamera.CameraDirection.BACK, cameraMonitorViewId);
-        aprilTagDetectionPipeline = new AprilTagDetectionPipeline(tagsize, fx, fy, cx, cy);
+        aprilTagDetectionPipeline = new AprilTagDetectionPipeline(tagSize, fx, fy, cx, cy);
 
         camera.setPipeline(aprilTagDetectionPipeline);
         camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
@@ -125,21 +118,21 @@ public class LiamAuto extends LinearOpMode {
                 boolean tagFound = false;
 
                 for(AprilTagDetection tag : currentDetections) {
-                    if(tag.id == ID_TAG_OF_INTEREST1) {
+                    if(tag.id == tagOfInterest1) {
                         tagOfInterest = tag;
                         tagFound = true;
                         tagPosition = 1;
                         break;
                     }
 
-                    if(tag.id == ID_TAG_OF_INTEREST2) {
+                    if(tag.id == tagOfInterest2) {
                         tagOfInterest = tag;
                         tagFound = true;
                         tagPosition = 2;
                         break;
                     }
 
-                    if(tag.id == ID_TAG_OF_INTEREST3) {
+                    if(tag.id == tagOfInterest3) {
                         tagOfInterest = tag;
                         tagFound = true;
                         tagPosition = 3;
@@ -186,17 +179,17 @@ public class LiamAuto extends LinearOpMode {
 
     }
     public void setSlider(double level) {
-        //middleslideDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        //middleslideDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         double position = 0;
         if (level == 1) {position = 70;}
         if (level == 2) {position = 2000;}
         if (level == 3) {position = 4000;}
-        if (middleslideDrive.getCurrentPosition() < position) {
-            while (middleslideDrive.getCurrentPosition() < position) {middleslideDrive.setPower(0.3);}
+        if (middleSlideDrive.getCurrentPosition() < position) {
+            while (middleSlideDrive.getCurrentPosition() < position) {
+                middleSlideDrive.setPower(0.3);}
         }
-        if (middleslideDrive.getCurrentPosition() > position) {
-            while (middleslideDrive.getCurrentPosition() > position) {middleslideDrive.setPower(-0.3);}
+        if (middleSlideDrive.getCurrentPosition() > position) {
+            while (middleSlideDrive.getCurrentPosition() > position) {
+                middleSlideDrive.setPower(-0.3);}
         }
 
     }
