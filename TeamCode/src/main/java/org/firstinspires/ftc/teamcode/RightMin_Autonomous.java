@@ -37,7 +37,7 @@ public class RightMin_Autonomous extends LinearOpMode {
         ElapsedTime matchTime = new ElapsedTime();
         telemetry.addData("Run Time:", matchTime);
         //moveSimpleEnc(1,0.3,tile);
-        moveSimple(30,1);
+        moveSimple(30,.5);
         //moveEncoders(90,30,1000);
         //moveEncoders(90,30,1000)
         // moveSimpleEnc(1,0.3, 2*tile);

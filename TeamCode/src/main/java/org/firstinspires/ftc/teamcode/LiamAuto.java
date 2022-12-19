@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -19,11 +20,15 @@ public class LiamAuto extends LinearOpMode {
 
     private final ElapsedTime runtime = new ElapsedTime();
     private DcMotor middleSlideDrive = null;
+    private boolean hasRun = false;
+    private DcMotor frontleftDrive = null;
+    private DcMotor frontrightDrive = null;
+    private DcMotor backleftDrive = null;
+    private DcMotor backrightDrive = null;
+    private DcMotor middleslideDrive = null;
+    private Servo rightgripperDrive = null;
+    private Servo leftgripperDrive = null;
 
-    double gripperStartPositionLeft = .9;
-    double gripperStartPositionRight = .9;
-    double gripperEndPositionLeft = 1;
-    double gripperEndPositionRight = 1;
 
     OpenCvCamera camera;
     AprilTagDetectionPipeline aprilTagDetectionPipeline;
@@ -54,23 +59,21 @@ public class LiamAuto extends LinearOpMode {
     public void runOpMode()
     {
         // Motors and Servos
-        DcMotor frontleftDrive = hardwareMap.get(DcMotor.class, "front_left_drive");
-        DcMotor frontrightDrive = hardwareMap.get(DcMotor.class, "front_right_drive");
-        DcMotor backleftDrive = hardwareMap.get(DcMotor.class, "back_left_drive");
-        DcMotor backrightDrive = hardwareMap.get(DcMotor.class, "back_right_drive");
+        frontleftDrive = hardwareMap.get(DcMotor.class, "front_left_drive");
+        frontrightDrive = hardwareMap.get(DcMotor.class, "front_right_drive");
+        backleftDrive = hardwareMap.get(DcMotor.class, "back_left_drive");
+        backrightDrive = hardwareMap.get(DcMotor.class, "back_right_drive");
         middleSlideDrive = hardwareMap.get(DcMotor.class, "middle_slides_drive");
 
-        Servo rightgripperDrive = hardwareMap.get(Servo.class, "right_gripper_drive");
-        Servo leftgripperDrive = hardwareMap.get(Servo.class, "left_gripper_drive");
+        rightgripperDrive = hardwareMap.get(Servo.class, "right_gripper_drive");
+        leftgripperDrive = hardwareMap.get(Servo.class, "left_gripper_drive");
 
-        frontleftDrive.setDirection(DcMotor.Direction.FORWARD);
-        frontrightDrive.setDirection(DcMotor.Direction.REVERSE);
-        backleftDrive.setDirection(DcMotor.Direction.FORWARD);
-        backrightDrive.setDirection(DcMotor.Direction.REVERSE);
-        rightgripperDrive.setDirection(Servo.Direction.REVERSE);
-        leftgripperDrive.setDirection(Servo.Direction.FORWARD);
-        middleSlideDrive.setDirection(DcMotor.Direction.FORWARD);
+        frontleftDrive.setDirection(DcMotorSimple.Direction.REVERSE);
+        frontrightDrive.setDirection(DcMotorSimple.Direction.FORWARD);
+        backleftDrive.setDirection(DcMotorSimple.Direction.REVERSE);
+        backrightDrive.setDirection(DcMotorSimple.Direction.FORWARD);
         middleSlideDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
         frontleftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         frontrightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         backleftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -84,7 +87,6 @@ public class LiamAuto extends LinearOpMode {
         middleSlideDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
 
-
         //Camera
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         OpenCvCamera camera = OpenCvCameraFactory.getInstance().createInternalCamera(OpenCvInternalCamera.CameraDirection.BACK, cameraMonitorViewId);
@@ -96,7 +98,7 @@ public class LiamAuto extends LinearOpMode {
             @Override
             public void onOpened()
             {
-                camera.startStreaming(800,448, OpenCvCameraRotation.SIDEWAYS_LEFT);
+                camera.startStreaming(800,448, OpenCvCameraRotation.UPRIGHT);
             }
 
             @Override
@@ -151,31 +153,43 @@ public class LiamAuto extends LinearOpMode {
             telemetry.addLine("Executing plan " + tagPosition);
             telemetry.update();
 
-            if (tagPosition == 1) { location1(); }
+            if (tagPosition == 1) {
+                location1();
+            }
 
-            if (tagPosition == 2) { location2(); }
+            if (tagPosition == 2) {
+                location2();
+            }
 
-            if (tagPosition == 3) { location3(); }
+            if (tagPosition == 3) {
+                location3();
+            }
 
         } else {
             telemetry.addLine("No tag available, it was never seen during the init loop :(");
             telemetry.addLine("Backup plan INITIATED :)");
-            location0();
+            while(!hasRun) {
+
+                location0();
+            }
             telemetry.update();
         }
     }
 
     public void location0() { // if no april tag is detected
-
+        hasRun = true;
     }
     public void location1() {
-
+        moveSimple(30,.5);
+        setServo(0);
     }
     public void location2() {
+        moveSimple(1,1);
 
     }
     public void location3() {
-
+        moveSimple(120,.5);
+        setSlider(2);
     }
     public void setSlider(double level) {
         double position = 0;
@@ -192,5 +206,34 @@ public class LiamAuto extends LinearOpMode {
         }
 
     }
+    public void moveSimple (double direction, double time) {
+        time = time*1;
+        ElapsedTime movementTime = new ElapsedTime();
+        while (movementTime.time() < time) {
+            frontleftDrive.setPower(direction);
+            frontrightDrive.setPower(direction);
+            backleftDrive.setPower(direction);
+            backrightDrive.setPower(direction);
+        }
+    }
+    public void setServo (double position) {
+        position = position * 1;
+        if (position == 1) {
+            while (leftgripperDrive.getPosition() != .505) {
+                leftgripperDrive.setPosition(.505);
+                rightgripperDrive.setPosition(.35);
+            }
+
+        }
+        if (position == 0) {
+            while (leftgripperDrive.getPosition() != .77) {
+                leftgripperDrive.setPosition(.77);
+                rightgripperDrive.setPosition(.12);
+            }
+
+        }
+
+    }
+
 
 }
