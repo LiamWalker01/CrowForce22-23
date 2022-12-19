@@ -6,8 +6,6 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-
 
 @TeleOp(name="Teleop", group="Linear Opmode")
 //@Disabled
@@ -20,8 +18,8 @@ public class Teleop extends LinearOpMode {
     private DcMotor backleftDrive = null;
     private DcMotor backrightDrive = null;
     private DcMotor middleslideDrive = null;
-    private Servo rightgripperDrive = null;
-    private Servo leftgripperDrive = null;
+    private Servo rightGripperDrive = null;
+    private Servo leftGripperDrive = null;
 
 
     // @Override
@@ -37,8 +35,8 @@ public class Teleop extends LinearOpMode {
         backleftDrive = hardwareMap.get(DcMotor.class, "back_left_drive");
         backrightDrive = hardwareMap.get(DcMotor.class, "back_right_drive");
         middleslideDrive= hardwareMap.get(DcMotor.class, "middle_slides_drive");
-        rightgripperDrive = hardwareMap.get(Servo.class, "right_gripper_drive");
-        leftgripperDrive = hardwareMap.get(Servo.class, "left_gripper_drive");
+        rightGripperDrive = hardwareMap.get(Servo.class, "right_gripper_drive");
+        leftGripperDrive = hardwareMap.get(Servo.class, "left_gripper_drive");
         // DistanceSensor frontDistance = hardwareMap.get(DistanceSensor.class, "front_distance");
 
         // Define Boolean Buttons
@@ -70,11 +68,11 @@ public class Teleop extends LinearOpMode {
         double vertical;
         double horizontal;
         double pivot;
-        double gripperStartPositionLeft = 0.1;
+        /*double gripperStartPositionLeft = 0.1;
         double gripperStartPositionRight = 0.2;
         double gripperEndPositionLeft = -.1;
         double gripperEndPositionRight = 0;
-
+        */
 
 
 
@@ -83,8 +81,6 @@ public class Teleop extends LinearOpMode {
         frontrightDrive.setDirection(DcMotor.Direction.REVERSE);
         backleftDrive.setDirection(DcMotor.Direction.FORWARD);
         backrightDrive.setDirection(DcMotor.Direction.REVERSE);
-        rightgripperDrive.setDirection(Servo.Direction.REVERSE);
-        leftgripperDrive.setDirection(Servo.Direction.FORWARD);
         middleslideDrive.setDirection(DcMotor.Direction.FORWARD);
         middleslideDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
@@ -93,8 +89,8 @@ public class Teleop extends LinearOpMode {
         runtime.reset();
 
         // Stuff we want run once after start
-        rightgripperDrive.setPosition(gripperStartPositionRight);
-        leftgripperDrive.setPosition(gripperStartPositionLeft);
+        //rightgripperDrive.setPosition(gripperStartPositionRight);
+        //leftgripperDrive.setPosition(gripperStartPositionLeft);
         double slidesInitialPosition = middleslideDrive.getCurrentPosition();
 
         // Run until the end of the match (driver presses STOP)
@@ -151,14 +147,13 @@ public class Teleop extends LinearOpMode {
 
 
             // Controls grippers
-            if (rBPress) {
-                rightgripperDrive.setPosition(gripperEndPositionRight);
-                leftgripperDrive.setPosition(gripperEndPositionLeft);
-            }
-
             if (lBPress) {
-                rightgripperDrive.setPosition(gripperStartPositionRight);
-                leftgripperDrive.setPosition(gripperStartPositionLeft);
+                leftGripperDrive.setPosition(.77);
+                rightGripperDrive.setPosition(.12);
+            }
+            if (rBPress) {
+                leftGripperDrive.setPosition(.505);
+                rightGripperDrive.setPosition(.35);
             }
 
             // Moves robot by using joystick position
@@ -185,8 +180,8 @@ public class Teleop extends LinearOpMode {
             telemetry.addData("Slides Automatic", automaticSlides);
             telemetry.addData("Slides State", slidesPosition + "nth Position");
             telemetry.addData("Intial Position", slidesInitialPosition);
-            telemetry.addData("Right Grips", "Position:" + rightgripperDrive.getPosition());
-            telemetry.addData("Left Grips", "Position:" + leftgripperDrive.getPosition());
+            telemetry.addData("Right Grips", "Position:" + rightGripperDrive.getPosition());
+            telemetry.addData("Left Grips", "Position:" + leftGripperDrive.getPosition());
             telemetry.addData("Power is multiplied by", power);
             telemetry.update();
             //telemetry.addData("Driver 2 Stick:", "Right: " + gamepad2.right_stick_x);

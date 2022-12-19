@@ -83,8 +83,7 @@ public class LiamAuto extends LinearOpMode {
         backrightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         middleSlideDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        rightgripperDrive.setPosition(gripperStartPositionRight);
-        leftgripperDrive.setPosition(gripperStartPositionLeft);
+
 
         //Camera
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
