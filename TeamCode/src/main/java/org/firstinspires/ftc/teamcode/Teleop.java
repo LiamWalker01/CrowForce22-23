@@ -86,6 +86,7 @@ public class Teleop extends LinearOpMode {
         frontrightDrive.setDirection(DcMotor.Direction.REVERSE);
         backleftDrive.setDirection(DcMotor.Direction.FORWARD);
         backrightDrive.setDirection(DcMotor.Direction.REVERSE);
+        
         middleslideDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // Wait for the game to start (driver presses PLAY)
@@ -163,7 +164,7 @@ public class Teleop extends LinearOpMode {
             if (yPress1) {
                 power = 1;
             } else if (aPress1) {
-                power = .5;
+                power = .1;
             }
 
             vertical = -gamepad1.left_stick_y;
