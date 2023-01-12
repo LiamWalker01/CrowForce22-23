@@ -41,11 +41,12 @@ public class LeftMin_Autonomous extends LinearOpMode {
 
         double tile = 1000;
 
+        moveSimpleEnc(1, .5, 1);
         ElapsedTime matchTime = new ElapsedTime();
         telemetry.addData("Run Time:", matchTime);
 
         //moveSimple(30,1);
-        moveEncoders(90,0.5,1000);
+        //moveEncoders(90,0.5,1000);
         //moveEncoders(90,30,1000);
 
         telemetry.update();
@@ -226,6 +227,7 @@ public class LeftMin_Autonomous extends LinearOpMode {
 
     }
     public void moveSimpleEnc(double direction, double speed, double distance) {
+        distance = distance*1745.45455;
         frontleftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         frontrightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         backleftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -234,13 +236,17 @@ public class LeftMin_Autonomous extends LinearOpMode {
         frontrightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backleftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backrightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        frontleftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        frontrightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backleftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backrightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         boolean backwards = false;
         if (direction < 0) {
             backwards = true;
         }
 
 
-        if (backwards = true) {
+        if (backwards == true) {
             while (frontleftDrive.getCurrentPosition() > -distance) {
                 frontleftDrive.setPower(-speed);
                 backrightDrive.setPower(speed);
@@ -250,7 +256,7 @@ public class LeftMin_Autonomous extends LinearOpMode {
 
         }
 
-        if (backwards = false) {
+        if (backwards == false) {
             while (frontleftDrive.getCurrentPosition() < distance) {
                 frontleftDrive.setPower(speed);
                 backrightDrive.setPower(-speed);

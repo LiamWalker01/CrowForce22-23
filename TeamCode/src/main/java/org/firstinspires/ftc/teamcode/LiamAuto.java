@@ -180,15 +180,15 @@ public class LiamAuto extends LinearOpMode {
         hasRun = true;
     }
     public void location1() {
-        moveSimple(30,.5);
+        moveSimple(30,10);
         setServo(0);
     }
     public void location2() {
-        moveSimple(1,1);
+        moveSimple(1,10);
 
     }
     public void location3() {
-        moveSimple(120,.5);
+        moveSimple(120,10);
         setSlider(2);
     }
     public void setSlider(double level) {
@@ -206,16 +206,9 @@ public class LiamAuto extends LinearOpMode {
         }
 
     }
-    public void moveSimple (double direction, double time) {
-        time = time*1;
-        ElapsedTime movementTime = new ElapsedTime();
-        while (movementTime.time() < time) {
-            frontleftDrive.setPower(direction);
-            frontrightDrive.setPower(direction);
-            backleftDrive.setPower(direction);
-            backrightDrive.setPower(direction);
+    public void moveSimple (double power, double time) {
+
         }
-    }
     public void setServo (double position) {
         position = position * 1;
         if (position == 1) {
